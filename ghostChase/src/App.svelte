@@ -6,6 +6,6 @@
 </script>
 
 <main>
-  <h1>Hello Ghost Chase</h1>
+  <h1>Ghost Chase</h1>
   <Canvas />
 </main>

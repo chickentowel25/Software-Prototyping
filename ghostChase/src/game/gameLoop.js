@@ -11,10 +11,10 @@ export function preload(p) {
 export function setup(p) {
   setupAnimations(p);
 
-  engine = Matter.Engine.create();  // ✅ create engine first
-  world = engine.world;             // ✅ get world next
+  engine = Matter.Engine.create();  // create engine first
+  world = engine.world;             // get world next
 
-  maze = createMaze(p, world);      // ✅ then pass world to maze
+  maze = createMaze(p, world);      // pass world to maze
   playerBody = setupPlayer(p, world);
 }
 
