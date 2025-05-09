@@ -32,14 +32,23 @@ export function drawPlayer(p, body) {
   if (!body?.position) return;
 
   const pos = body.position;
+
   p.push();
   p.translate(pos.x, pos.y);
 
+  // ✅ Shift sprite UP so feet rest on tile, not center overlap
   if (Math.abs(body.velocity.y) > 0.1) {
-    jumpAnim.draw(p, -64, -64);
+    jumpAnim.draw(p, -64, -128); // <- Y is now -128
   } else {
-    runAnim.draw(p, -64, -64);
+    runAnim.draw(p, -64, -128);
   }
+
+  // ✅ Optional debug overlay (to match body and sprite)
+  p.stroke(255,0,0);
+  p.noFill();
+  p.rectMode(p.CENTER);
+  p.rect(0, -32, 40, 80); // match your Matter body dimensions
 
   p.pop();
 }
+

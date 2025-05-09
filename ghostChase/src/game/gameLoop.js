@@ -1,12 +1,8 @@
-import { createMaze, drawMaze } from './maze.js';
 import { setupPlayer, updatePlayer, drawPlayer } from './player.js';
+import { createMaze, drawMaze } from './maze.js';
 import { preloadAnimations, setupAnimations } from './animations.js';
 
-const { Engine, World } = Matter;
-export const engine = Engine.create();
-const world = engine.world;
-
-let playerBody, maze;
+let engine, world, maze, playerBody;
 
 export function preload(p) {
   preloadAnimations(p);
@@ -14,9 +10,11 @@ export function preload(p) {
 
 export function setup(p) {
   setupAnimations(p);
-  maze = createMaze(p);
 
-  // ✅ Pass in world
+  engine = Matter.Engine.create();  // ✅ create engine first
+  world = engine.world;             // ✅ get world next
+
+  maze = createMaze(p, world);      // ✅ then pass world to maze
   playerBody = setupPlayer(p, world);
 }
 
