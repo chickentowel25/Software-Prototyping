@@ -1,36 +1,45 @@
-import { isWallAt } from './maze.js';
+import { runFrames, jumpFrames, SpriteAnimation } from './animations.js';
 
-let direction = { x: 0, y: 0 };
-let speed = 2;
-let playerSprite;
+let runAnim, jumpAnim;
+let playerBody;
 
-export function createPlayer(p) {
-  console.log("player created");
+export function setupPlayer(p, world) {
+  // Create Matter.js body
+  playerBody = Matter.Bodies.rectangle(200, 300, 40, 80, {
+    restitution: 0.1,
+    friction: 0.1,
+  });
+  Matter.World.add(world, playerBody);
 
-  playerSprite = new p.Sprite(100, 100, 30, 30);
-  playerSprite.color = 'yellow';
-  playerSprite.collider = 'dynamic';
-  return playerSprite;
+  // Set up animations
+  runAnim = new SpriteAnimation(runFrames, 4);
+  jumpAnim = new SpriteAnimation(jumpFrames, 4);
+
+  return playerBody;
 }
 
-export function updatePlayer(p, player, maze) {
-  // Set velocity based on direction
-  player.vel.x = direction.x * speed;
-  player.vel.y = direction.y * speed;
+export function updatePlayer(p, body) {
+  if (!body?.velocity) return;
 
-
-  // You can add maze collision here if needed
-}
-
-export function drawPlayer(p, playerSprite) {
-    if (playerSprite && typeof playerSprite.draw === 'function') {
-      playerSprite.draw(); // required to actually render it
-    } else {
-      console.warn("Player not drawable", playerSprite);
-    }
+  if (Math.abs(body.velocity.y) > 0.1) {
+    jumpAnim.update();
+  } else if (Math.abs(body.velocity.x) > 0.1) {
+    runAnim.update();
   }
-  
+}
 
-export function setDirection(dir) {
-  direction = dir;
+export function drawPlayer(p, body) {
+  if (!body?.position) return;
+
+  const pos = body.position;
+  p.push();
+  p.translate(pos.x, pos.y);
+
+  if (Math.abs(body.velocity.y) > 0.1) {
+    jumpAnim.draw(p, -64, -64);
+  } else {
+    runAnim.draw(p, -64, -64);
+  }
+
+  p.pop();
 }
