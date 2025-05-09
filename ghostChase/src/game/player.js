@@ -6,9 +6,10 @@ let playerBody;
 
 export function setupPlayer(p, world) {
   // Create Matter.js body
-  playerBody = Matter.Bodies.rectangle(200, 360, 40, 80, {
-    restitution: 0.1,
-    friction: 0.1,
+  playerBody = Matter.Bodies.rectangle(50, 475, 32, 90, {
+    restitution: 0.05,
+    friction: 0.2,
+    frictionAir: 0.02,
   });
   Matter.World.add(world, playerBody);
 
@@ -22,7 +23,7 @@ export function setupPlayer(p, world) {
 export function updatePlayer(p, body) {
   if (!body?.velocity) return;
 
-  const keys = getKeyState(); // ✅ get live state
+  const keys = getKeyState(); // get live state
   const force = 0.002;
   const jumpForce = -0.05;
 
@@ -41,7 +42,13 @@ export function updatePlayer(p, body) {
     Matter.Body.setVelocity(body, { x: 0, y: body.velocity.y });
   }
 
-   if (keys.up) {
+  // If player is almost not moving vertically, reset Y velocity to 0
+if (Math.abs(body.velocity.y) < 0.1) {
+  Matter.Body.setVelocity(body, { x: body.velocity.x, y: 0 });
+}
+
+
+  if (keys.up) {
     jumpAnim.update();
   } else if (keys.left || keys.right) {
     runAnim.update();
@@ -58,9 +65,9 @@ export function drawPlayer(p, body) {
 
   // Shift sprite UP so feet rest on tile, not center overlap
   if (Math.abs(body.velocity.y) > 0.1) {
-    jumpAnim.draw(p, -64, -90);
+    jumpAnim.draw(p, -16, -48, 90, 90);
   } else {
-    runAnim.draw(p, -64, -90);
+    runAnim.draw(p, -16, -48, 90, 90); // Draw sprite at 32x48
   }
 
   p.pop();
