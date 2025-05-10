@@ -1,55 +1,44 @@
-export function parseAsciiMap(asciiMap) {
-  return asciiMap.map(row => row.split('').map(char => (char === '#' ? 1 : 0)));
-}
+export function createMazeFromTiled(p, world, mapData) {
+  const tileSize = mapData.tilewidth;
+  const layer = mapData.layers.find(l => l.name === 'platforms');
 
-export function createMaze(p, world) {
-  const asciiMap = [
-    "########  ###",
-    "#           #",
-    "#     ###   #",
-    "# ##       ##",
-    "###         #",
-    "#     ####  #",
-    "# ##    #####",
-    "#           #",
-    "#    ##     #",
-    "#  ###  #####",
-    "#         ###",
-    "#############"
-  ];
+  if (!layer || !layer.data) return;
 
-  const layout = parseAsciiMap(asciiMap);
-  const tileSize = 50;
+  const cols = layer.width;
+  const rows = layer.height;
+  const data = layer.data;
+
   const wallBodies = [];
 
-  for (let row = 0; row < layout.length; row++) {
-    for (let col = 0; col < layout[0].length; col++) {
-      if (layout[row][col] === 1) {
-        const x = col * tileSize + tileSize / 2;
-        const y = row * tileSize + tileSize / 2;
-        const wall = Matter.Bodies.rectangle(x, y, tileSize, tileSize, { isStatic: true });
-        wallBodies.push(wall);
-        Matter.World.add(world, wall);
-      }
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const index = row * cols + col;
+      const gid = data[index];
+      if (gid === 0) continue;
+
+      const x = col * tileSize + tileSize / 2;
+      const y = row * tileSize + 4; // draw near the top
+
+      const body = Matter.Bodies.rectangle(x, y, tileSize, 8, {
+        isStatic: true,
+        label: 'oneway-platform'
+      });
+
+      Matter.World.add(world, body);
+      wallBodies.push(body);
     }
   }
 
-  return { layout, tileSize, rows: layout.length, cols: layout[0].length, wallBodies };
+  return {
+    wallBodies,
+    tileSize,
+    rows,
+    cols
+  };
 }
 
 
-export function drawMaze(p, maze) {
-  p.noStroke();
-  p.fill(80);
 
-  for (let row = 0; row < maze.rows; row++) {
-    for (let col = 0; col < maze.cols; col++) {
-      if (maze.layout[row][col] === 1) {
-        p.rect(col * maze.tileSize, row * maze.tileSize, maze.tileSize, maze.tileSize);
-      }
-    }
-  }
-}
 
 export function isWallAt(maze, x, y) {
   const col = Math.floor(x / maze.tileSize);

@@ -14,7 +14,7 @@
 
       p.setup = () => {
         console.log("🧱 setup called");
-        p.createCanvas(800, 600);
+        p.createCanvas(800, 800);
         setup(p);
       };
 
