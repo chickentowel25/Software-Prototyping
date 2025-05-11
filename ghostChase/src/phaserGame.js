@@ -1,5 +1,3 @@
-import { tilesetImg } from "./game/mapLoader"
-
 export default class Game extends Phaser.Scene {
     constructor() {
         super('game')
@@ -53,11 +51,11 @@ export default class Game extends Phaser.Scene {
 
 
         const gemPositions = [
-            [150, 150],
-            [600, 200],
-            [400, 300],
-            [200, 450],
-            [550, 485]
+            [175, 210],
+            [600, 296],
+            [400, 396],
+            [200, 546],
+            [550, 581]
         ];
 
         gemPositions.forEach(([x, y]) => this._spawnGem(x, y));

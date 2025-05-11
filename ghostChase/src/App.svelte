@@ -1,8 +1,18 @@
 <script>
-  import Game from './Game.svelte';
+  import { onMount } from 'svelte';
+  import { startPhaserGame } from './phaserMain.js';
+
+  let container;
+  onMount(() => {
+    startPhaserGame(container);
+  });
 </script>
 
 <main>
-  <h1>Ghost Chase with Phaser</h1>
-  <Game />
+  <h1>Subterrane Bandit</h1>
+  <div bind:this={container} class="phaser-container"></div>
 </main>
+
+<style global>
+  @import './app.css';
+</style>

@@ -5,13 +5,17 @@ import Game from './phaserGame.js'
 export function startPhaserGame(container) {
     const config = {
         type: Phaser.AUTO,
-        width: 800,
-        height: 700,
         parent: container,
+        scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+            width: 768,
+            height: 768
+        },
         physics: {
             default: 'matter',
             matter: {
-                debug: true
+                debug: false
             }
         },
         scene: [Game]
