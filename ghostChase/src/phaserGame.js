@@ -38,33 +38,6 @@ export default class Game extends Phaser.Scene {
         const ground = map.createLayer('platforms', tileset)
         ground.setCollisionByProperty({ collides: true })
 
-        // const objectsLayer = map.getObjectLayer('objects')
-
-        // objectsLayer.objects.forEach(objData => {
-        //     const { x = 0, y = 0, name, width = 0, height = 0 } = objData
-        //     switch (name) {
-        //         case 'player-spawn': {
-        //             this._player = this.matter.add.sprite(x + width / 2, y, 'player-idle')
-        //                 .play('player-idle')
-        //                 .setFixedRotation()
-        //                 .setFriction(0)
-
-
-        //             break
-        //         }
-        //         case 'gem': {
-        //             const gem = this.matter.add.sprite(x, y, 'gem', undefined, {
-        //                 isStatic: true
-        //             })
-
-        //             gem.setData('type', 'gem')
-        //             break
-        //         }
-
-
-        //     }
-        // })
-
         this.matter.world.convertTilemapLayer(wall)
         this.matter.world.convertTilemapLayer(ground)
 
@@ -78,11 +51,17 @@ export default class Game extends Phaser.Scene {
             this._isTouchingGround = true;
         })
 
-        const gem = this.matter.add.sprite(400, 300, 'gem', undefined, {
-            isStatic: true,
-            isSensor: true
-        });
-        gem.setData('type', 'gem');
+
+        const gemPositions = [
+            [150, 150],
+            [600, 200],
+            [400, 300],
+            [200, 450],
+            [550, 485]
+        ];
+
+        gemPositions.forEach(([x, y]) => this._spawnGem(x, y));
+
 
         this.matter.world.on('collisionstart', (event) => {
             event.pairs.forEach(pair => {
@@ -169,4 +148,14 @@ export default class Game extends Phaser.Scene {
             repeat: -1
         })
     }
+
+    _spawnGem(x, y) {
+        const gem = this.matter.add.sprite(x, y, 'gem', undefined, {
+            isStatic: true,
+            isSensor: true
+        });
+
+        gem.setData('type', 'gem');
+    }
+
 }
