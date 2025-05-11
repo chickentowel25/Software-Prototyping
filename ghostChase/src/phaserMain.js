@@ -19,11 +19,3 @@ export function startPhaserGame(container) {
 
     new Phaser.Game(config);
 }
-
-// export function preload() {
-//     this.load.atlas
-//  }
-
-// export function create() { }
-
-// export function update() { }

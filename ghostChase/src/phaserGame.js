@@ -20,6 +20,7 @@ export default class Game extends Phaser.Scene {
 
         this.load.image('tiles', 'assets/Medieval_tiles_free2.png')
         this.load.tilemapTiledJSON('tilemap', 'assets/dungeon.json')
+        this.load.image('gem', 'assets/gem.png')
     }
 
     create() {
@@ -37,9 +38,35 @@ export default class Game extends Phaser.Scene {
         const ground = map.createLayer('platforms', tileset)
         ground.setCollisionByProperty({ collides: true })
 
+        // const objectsLayer = map.getObjectLayer('objects')
+
+        // objectsLayer.objects.forEach(objData => {
+        //     const { x = 0, y = 0, name, width = 0, height = 0 } = objData
+        //     switch (name) {
+        //         case 'player-spawn': {
+        //             this._player = this.matter.add.sprite(x + width / 2, y, 'player-idle')
+        //                 .play('player-idle')
+        //                 .setFixedRotation()
+        //                 .setFriction(0)
+
+
+        //             break
+        //         }
+        //         case 'gem': {
+        //             const gem = this.matter.add.sprite(x, y, 'gem', undefined, {
+        //                 isStatic: true
+        //             })
+
+        //             gem.setData('type', 'gem')
+        //             break
+        //         }
+
+
+        //     }
+        // })
+
         this.matter.world.convertTilemapLayer(wall)
         this.matter.world.convertTilemapLayer(ground)
-
 
         const { width, height } = this.scale
 
@@ -47,10 +74,35 @@ export default class Game extends Phaser.Scene {
             .play('player-idle')
             .setFixedRotation()
             .setFriction(0)
-
         this._player.setOnCollide((data) => {
             this._isTouchingGround = true;
         })
+
+        const gem = this.matter.add.sprite(400, 300, 'gem', undefined, {
+            isStatic: true,
+            isSensor: true
+        });
+        gem.setData('type', 'gem');
+
+        this.matter.world.on('collisionstart', (event) => {
+            event.pairs.forEach(pair => {
+                const { bodyA, bodyB } = pair;
+
+                const a = bodyA.gameObject;
+                const b = bodyB.gameObject;
+
+                if (a && typeof a.getData === 'function' && a.getData('type') === 'gem') {
+                    setTimeout(() => a.destroy(), 0);
+                }
+
+                if (b && typeof b.getData === 'function' && b.getData('type') === 'gem') {
+                    setTimeout(() => b.destroy(), 0);
+                }
+            });
+        });
+
+
+
         this.input.keyboard.enabled = true;
         // Ensure focus (from Svelte to Phaser)
         this.input.keyboard.on('keydown', () => {
@@ -60,6 +112,8 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
+        if (!this._player) return;
+
         const speed = 5;
         if (this._cursors.left.isDown) {
             this._player.flipX = true;
