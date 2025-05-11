@@ -81,5 +81,5 @@ subterrane-bandit/
 - The tileset and character sprite assets were brought from: [https://craftpix.net](https://craftpix.net)
 
 ## Visuals & Screenshots
-- [Gameplay](assets/gameplay_01.png)
+- [Gameplay](/public/assets/gameplay_01.png)
 - Diagram of code/module structure if needed
