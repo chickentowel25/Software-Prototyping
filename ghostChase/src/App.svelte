@@ -1,11 +1,8 @@
-
-
 <script>
-  console.log("✅ App.svelte loaded");
-  import Canvas from './components/Canvas.svelte';
+  import Game from './Game.svelte';
 </script>
 
 <main>
-  <h1>Ghost Chase</h1>
-  <Canvas />
+  <h1>Ghost Chase with Phaser</h1>
+  <Game />
 </main>
