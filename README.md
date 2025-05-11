@@ -69,7 +69,7 @@ subterrane-bandit/
 - Sprite animations controlled by user input
 
 ## Known Issues & Special Features
-- **Known Bug**: Player slightly floats at start before physics stabilizes
+- **Known Issues**: There were compatibility issues with p5play, so I used Phaser 3 and matter-js instead.
 - **Special Feature**: Win screen created with DOM overlay and restart button
 
 ## Acknowledgements
@@ -82,4 +82,3 @@ subterrane-bandit/
 
 ## Visuals & Screenshots
 - [Gameplay](/public/assets/gameplay_01.png)
-- Diagram of code/module structure if needed

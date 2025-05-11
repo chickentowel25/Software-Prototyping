@@ -18,6 +18,7 @@ export default class Game extends Phaser.Scene {
         this.load.image('tiles', 'assets/Medieval_tiles_free2.png')
         this.load.tilemapTiledJSON('tilemap', 'assets/dungeon.json')
         this.load.image('gem', 'assets/gem.png')
+        this.load.audio('gem-sound', 'assets/gem.wav');
     }
 
     showWinOverlay() {
@@ -75,7 +76,6 @@ export default class Game extends Phaser.Scene {
             this._isTouchingGround = true;
         })
 
-
         const gemPositions = [
             [175, 210],
             [600, 296],
@@ -84,6 +84,7 @@ export default class Game extends Phaser.Scene {
             [550, 581]
         ];
         gemPositions.forEach(([x, y]) => this._spawnGem(x, y));
+        this.gemCount = 0;
 
         this.winZoneTiles = [];
         winzone.forEachTile(tile => {
@@ -101,10 +102,14 @@ export default class Game extends Phaser.Scene {
 
                 if (a && typeof a.getData === 'function' && a.getData('type') === 'gem') {
                     setTimeout(() => a.destroy(), 0);
+                    this.sound.play('gem-sound');
+                    this.gemCount += 1;
                 }
 
                 if (b && typeof b.getData === 'function' && b.getData('type') === 'gem') {
                     setTimeout(() => b.destroy(), 0);
+                    this.sound.play('gem-sound');
+                    this.gemCount += 1;
                 }
             });
         });
@@ -140,6 +145,12 @@ export default class Game extends Phaser.Scene {
             this._player.setVelocityY(-10);
             this._isTouchingGround = false;
             this._player.play('player-jump', true);
+        }
+
+        // @ts-ignore
+        if (typeof window.setGemCount == 'function') {
+            // @ts-ignore
+            window.setGemCount(this.gemCount);
         }
 
         if (!this.hasWon) {
