@@ -11,10 +11,9 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
-        this.load.atlas('player-run', 'assets/player-run.png', 'assets/player-run.json')
-        this.load.atlas('player-jump', 'assets/player-jump.png', 'assets/player-jump.json')
-        this.load.atlas('player-idle', 'assets/player-idle.png', 'assets/player-idle.json')
-
+        this.load.atlas('player-idle', 'assets/sprites/player-idle.png', 'assets/sprites/player-idle.json')
+        this.load.atlas('player-run', 'assets/sprites/player-run.png', 'assets/sprites/player-run.json')
+        this.load.atlas('player-jump', 'assets/sprites/player-jump.png', 'assets/sprites/player-jump.json')
 
         this.load.image('tiles', 'assets/Medieval_tiles_free2.png')
         this.load.tilemapTiledJSON('tilemap', 'assets/dungeon.json')
@@ -153,7 +152,7 @@ export default class Game extends Phaser.Scene {
                     tileWorldX, tileWorldY
                 );
 
-                if (dist < 10) { 
+                if (dist < 10) {
                     this.hasWon = true;
 
                     // Delay win screen by 0.5s

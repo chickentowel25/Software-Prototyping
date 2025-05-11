@@ -1,47 +1,85 @@
-# Svelte + Vite
+# Subterrane Bandit
 
-This template should help get you started developing with Svelte in Vite.
+## Author Information
+- **Name**: Yewon Kim
+- **Student ID**: 20253158
+- **Email**: yewonkim@kaist.ac.kr
 
-## Recommended IDE Setup
+## Project Links
+- **Git Repository**: [https://github.com/chickentowel25/Software-Prototyping]
+- **YouTube Demo**: [http://bit.ly/3GMg8Di]
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## Game Description
+- 2D side-scrolling game built with Phaser 3 and Matter.js
+- You play as a **bandit** who steals **gems** from an underground dungeon
+- Objective: **Collect all gems** and reach the **exit zone** to win
+- Uses a tilemap created in Tiled for level layout
 
-## Need an official Svelte framework?
+## Code Organization
+- **phaserGame.js**
+  - Main game scene extending `Phaser.Scene`
+  - Handles loading assets (`preload`), scene setup (`create`), and game loop (`update`)
+- **Main Features**
+  - Player movement, animations, jump logic
+  - Collision detection using Matter.js
+  - Gem collection using sensor bodies
+  - Win condition detection with a "win zone"
+  - HTML overlay UI for win screen
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
-
-## Technical considerations
-
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+## Architecture & Patterns
+- Folder structure
+```plaintext
+subterrane-bandit/
+├── public/                   
+│   └── assets/
+│       ├── sprites
+|       |   ├── player-idle.json
+|       |   ├── player-idle.png
+|       |   ├── player-run.json
+|       |   ├── player-run.png
+|       |   ├── player-jump.json
+|       |   └── player-jump.png
+│       ├── dungeon.json
+│       ├── gem.png
+│       └── Medieval_tiles_free2.png
+├── src/
+│   ├── lib/           
+│   │   ├── phaserGame.js 
+│   │   └── phaserMain.js 
+│   ├── app.css
+│   ├── App.svelte
+│   ├── main.js
+│   └── vite-env.d.ts
+├── .gitignore
+├── index.html
+├── jsconfig.json
+├── package-lock.json
+├── package.json
+├── README.md       
+├── svelte.config.js           
+└── vite.config.js
 ```
+- Usage of modules: `preload`, `create`, `update`
+- Custom functions:
+  - `_createPlayerAnimation()`: defines animations
+  - `_spawnGem(x, y)`: places collectible gems
+  - `showWinOverlay()`: shows end-of-game screen
+- Uses data tags on sprites for identifying collectible types
+- Basic collision filtering logic inside `collisionstart` event
+- Sprite animations controlled by user input
+
+## Known Issues & Special Features
+- **Known Bug**: Player slightly floats at start before physics stabilizes
+- **Special Feature**: Win screen created with DOM overlay and restart button
+
+## Acknowledgements
+- ChatGPT was used to accelerate development; all final code was written and integrated by me.
+- The following YouTube tutorial for Phaser + TypeScript as a reference:  
+  [https://www.youtube.com/playlist?list=PLNwtXgWIx3rg3J4XyuDVhjU81dZbJtVAU](https://www.youtube.com/playlist?list=PLNwtXgWIx3rg3J4XyuDVhjU81dZbJtVAU)
+- Tiled was used for creating the game scene.
+- TexturePacker to create spritesheets and the corresponding sprite JSON arrays.
+- The tileset and character sprite assets were brought from: [https://craftpix.net](https://craftpix.net)
+
+## Visuals & Screenshots
+- [Gameplay](assets/gameplay_01.png)
+- Diagram of code/module structure if needed

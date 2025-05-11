@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { startPhaserGame } from './phaserMain.js';
+  import { startPhaserGame } from './lib/phaserMain.js';
 
   let container;
   onMount(() => {
