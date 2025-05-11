@@ -21,6 +21,32 @@ export default class Game extends Phaser.Scene {
         this.load.image('gem', 'assets/gem.png')
     }
 
+    showWinOverlay() {
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100vw';
+        overlay.style.height = '100vh';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        overlay.style.zIndex = '1000';
+        overlay.innerHTML = `
+      <h1 style="color:white; font-family:'Press Start 2P', cursive;">You Win</h1>
+      <button style="margin-top:20px; padding:10px 20px; font-family:'Press Start 2P'; font-size:12px;">Play Again</button>
+    `;
+
+        document.body.appendChild(overlay);
+
+        overlay.querySelector('button').addEventListener('click', () => {
+            overlay.remove();
+            this.scene.restart(); // restart the Phaser scene
+        });
+    }
+
     create() {
         this._createPlayerAnimation();
 
@@ -28,6 +54,7 @@ export default class Game extends Phaser.Scene {
         const tileset = map.addTilesetImage('Medieval_tiles_free2', 'tiles')
 
         const background = map.createLayer('background', tileset)
+        const winzone = map.createLayer('winzone', tileset)
         const lighting = map.createLayer('lighting', tileset)
 
         const wall = map.createLayer('walls', tileset)
@@ -57,9 +84,14 @@ export default class Game extends Phaser.Scene {
             [200, 546],
             [550, 581]
         ];
-
         gemPositions.forEach(([x, y]) => this._spawnGem(x, y));
 
+        this.winZoneTiles = [];
+        winzone.forEachTile(tile => {
+            if (tile.index !== -1 && tile.index !== 0) {
+                this.winZoneTiles.push(tile);
+            }
+        });
 
         this.matter.world.on('collisionstart', (event) => {
             event.pairs.forEach(pair => {
@@ -110,6 +142,28 @@ export default class Game extends Phaser.Scene {
             this._isTouchingGround = false;
             this._player.play('player-jump', true);
         }
+
+        if (!this.hasWon) {
+            this.winZoneTiles.forEach(tile => {
+                const tileWorldX = tile.getCenterX();
+                const tileWorldY = tile.getCenterY();
+
+                const dist = Phaser.Math.Distance.Between(
+                    this._player.x, this._player.y,
+                    tileWorldX, tileWorldY
+                );
+
+                if (dist < 10) { 
+                    this.hasWon = true;
+
+                    // Delay win screen by 0.5s
+                    this.time.delayedCall(500, () => {
+                        this.showWinOverlay();
+                    });
+                }
+            });
+        }
+
     }
 
     _createPlayerAnimation() {
