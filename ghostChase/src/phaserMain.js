@@ -9,9 +9,8 @@ export function startPhaserGame(container) {
         height: 700,
         parent: container,
         physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { x: 0, y: 200 },
+            default: 'matter',
+            matter: {
                 debug: true
             }
         },
